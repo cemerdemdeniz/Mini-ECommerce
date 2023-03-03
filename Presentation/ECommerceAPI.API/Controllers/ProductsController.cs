@@ -12,33 +12,31 @@ namespace ECommerceAPI.API.Controllers
         readonly private IProductWriteRepository _productWriteRepository;
         readonly private IProductReadRepository _productReadRepository;
 
-        public ProductsController(IProductReadRepository productReadRepository,IProductWriteRepository productWriteRepository)
+        readonly private IOrderWriteRepository _orderWriteRepository;
+        readonly private ICustomerWriteRepository _customerWriteRepository;
+
+        readonly private IOrderReadRepository _orderReadRepository;
+
+        public ProductsController(IProductReadRepository productReadRepository,IProductWriteRepository productWriteRepository , IOrderWriteRepository orderWriteRepository,ICustomerWriteRepository customerWriteRepository,IOrderReadRepository orderReadRepository)
         {
             _productReadRepository = productReadRepository;
             _productWriteRepository = productWriteRepository;
+            _orderWriteRepository = orderWriteRepository;
+            _customerWriteRepository = customerWriteRepository;
+            _orderReadRepository = orderReadRepository; 
         }
 
         [HttpGet]
         public async Task Get()
         {
-            // await _productWriteRepository.AddRangeAsync(new() {
-            //     new() { Id = Guid.NewGuid(), Name = "Product 1", Price = 100, CreatedDate = DateTime.UtcNow, Stock = 10, },
-            //     new() { Id = Guid.NewGuid(), Name = "Product 2", Price = 100, CreatedDate = DateTime.UtcNow, Stock = 20, },
-            //     new() { Id = Guid.NewGuid(), Name = "Product 3", Price = 100, CreatedDate = DateTime.UtcNow, Stock = 100, }
-            // });
-            //await _productWriteRepository.SaveAsync();
 
-           Product p = await _productReadRepository.GetByIdAsync("7e0164ce-25e8-4afa-9d8a-545451d048d1");
-            p.Name = "Ahmet";
-           await _productWriteRepository.SaveAsync();
+           Order order = await _orderReadRepository.GetByIdAsync("5c9c6650-55c3-453e-a902-b93012b94d7d");
+            order.Address = "Istanbul";
+           await _orderWriteRepository.SaveAsync();
+
+
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(string id)
-        {
-            Product product = await _productReadRepository.GetByIdAsync(id);
-            return Ok(product);
-        }
-       
+
     }
 }
